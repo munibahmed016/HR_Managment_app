@@ -1,4 +1,3 @@
-// Import necessary libraries
 import React, { useState, useEffect } from 'react';
 import { createTheme } from '@mui/material/styles';
 import { Button, Typography, Container, Card, CardContent, Grid, TextField, Box } from '@mui/material';
@@ -6,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchJobs, postJob } from '../Slice/jobSlice';
 
-// Theme setup
 const theme = createTheme({
   palette: {
     primary: {
@@ -16,11 +14,11 @@ const theme = createTheme({
       main: '#ADE1FB',
     },
     background: {
-      default: '#01082D',
+      default: 'linear-gradient(135deg, #E8F7FF, #AFCDEE)',
     },
     text: {
-      primary: '#FFFFFF',
-      secondary: '#ADE1FB',
+      primary: '#333333',
+      secondary: '#266CA9',
     },
   },
   typography: {
@@ -38,11 +36,20 @@ const HRHomePage = () => {
   }, [dispatch]);
 
   return (
-    <Container maxWidth="md" style={{ marginTop: '2rem' }}>
+    <Container
+      maxWidth="md"
+      style={{
+        marginTop: '2rem',
+        padding: '2rem',
+        borderRadius: '8px',
+        background: theme.palette.background.default,
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+      }}
+    >
       <Typography
         variant="h4"
         gutterBottom
-        style={{ textAlign: 'center', color: theme.palette.secondary.main, marginBottom: '1.5rem' }}
+        style={{ textAlign: 'center', color: theme.palette.text.secondary, marginBottom: '1.5rem' }}
       >
         My Posted Jobs
       </Typography>
@@ -60,13 +67,13 @@ const HRHomePage = () => {
             <Card
               style={{
                 padding: '1rem',
-                backgroundColor: theme.palette.background.default,
+                backgroundColor: '#FFFFFF',
                 color: theme.palette.text.primary,
                 boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
               }}
             >
               <CardContent>
-                <Typography variant="h6" style={{ color: theme.palette.secondary.main }}>
+                <Typography variant="h6" style={{ color: theme.palette.text.secondary }}>
                   {job.title}
                 </Typography>
                 <Typography variant="body1" style={{ margin: '0.5rem 0' }}>
@@ -83,7 +90,6 @@ const HRHomePage = () => {
     </Container>
   );
 };
-
 
 const HRPostJobPage = () => {
   const navigate = useNavigate();
@@ -105,8 +111,10 @@ const HRPostJobPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(postJob(formData));
-    navigate('/hr');
+    dispatch(postJob(formData)).then(() => {
+      dispatch(fetchJobs()); // Refresh jobs after posting
+      navigate('/hr');
+    });
   };
 
   return (
@@ -132,7 +140,7 @@ const HRPostJobPage = () => {
             <Typography
               variant="h5"
               gutterBottom
-              style={{ color: theme.palette.primary.main, textAlign: 'center', marginBottom: '1rem' }}
+              style={{ color: theme.palette.text.secondary, textAlign: 'center', marginBottom: '1rem' }}
             >
               Post a Job
             </Typography>

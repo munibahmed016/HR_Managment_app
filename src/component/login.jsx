@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TextField, Button, Typography, Box } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../Slice/authSlice";
 
 const Login = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -12,11 +15,11 @@ const Login = () => {
   };
 
   const handleLogin = async () => {
-    // Add API request logic here to verify user credentials and get their role
-    const role = "HR"; // Replace with API response
-    if (role) navigate(`/${role.toLowerCase()}`);
+    const result = await dispatch(loginUser(formData));
+    if (result.payload) {
+      navigate(`/${result.payload.role.toLowerCase()}`);
+    }
   };
-  
 
   return (
     <Box
@@ -67,20 +70,10 @@ const Login = () => {
             color: "#fff",
             mt: 2,
             "&:hover": { backgroundColor: "#0F2573" },
-            "&:active": { backgroundColor: "#01082D" },
           }}
         >
           Login Now
         </Button>
-        <Typography variant="body2" sx={{ mt: 2, textAlign: "center", color: "#777" }}>
-          Don&apos;t have an account?{" "}
-          <span
-            style={{ color: "#266CA9", cursor: "pointer" }}
-            onClick={() => navigate("/signup")}
-          >
-            Sign Up
-          </span>
-        </Typography>
       </Box>
     </Box>
   );
